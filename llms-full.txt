@@ -157,7 +157,7 @@ import { start } from '@/src/commands/start';
 import { teeCommand as tee } from '@/src/commands/tee';
 import { test } from '@/src/commands/test';
 import { update } from '@/src/commands/update';
-import { displayBanner, loadEnvironment } from '@/src/utils';
+import { displayBanner } from '@/src/utils';
 import { logger } from '@elizaos/core';
 import { Command, Option } from 'commander';
 import fs from 'node:fs';
@@ -2010,10 +2010,6 @@ export interface TokenizeTextParams extends BaseModelParams {
   prompt: string;
   modelType: ModelTypeName;
 }
-export interface DetokenizeTextParams extends BaseModelParams {
-  tokens: number[];
-  modelType: ModelTypeName;
-}
 export interface ImageGenerationParams extends BaseModelParams {
   prompt: string;
   size?: string;
@@ -3319,7 +3315,7 @@ Configure the database adapter using environment variables or settings:
 process.env.POSTGRES_URL = 'postgresql://username:password@localhost:5432/elizaos';
 
 // For PGLite (default)
-process.env.PGLITE_DATA_DIR = './.pglite'; // Optional, defaults to './pglite'
+process.env.PGLITE_DATA_DIR = './.elizadb'; // Optional, defaults to './pglite'
 ```
 
 ### Retry Logic & Error Handling
@@ -5061,7 +5057,7 @@ The new CLI tool introduces a streamlined workflow for plugin development withou
 4. **Run**: `elizaos start` - Run the plugin with a default agent
 5. **Publish**: `elizaos publish` - Share your plugin with others
 
-> Note: at time of publishing, use `npm create eliza@beta` until main version is uploaded
+> Note: at time of publishing, use `npm create eliza` until main version is uploaded
 
 ### Creating a New Plugin
 
@@ -5069,7 +5065,7 @@ You can create a new ElizaOS plugin using the CLI:
 
 ```bash
 # Using npm
-npm create eliza@beta
+npm create eliza
 
 # Or using npx
 npx create-eliza
@@ -5694,10 +5690,10 @@ You can create a new ElizaOS project using:
 
 ```bash
 # Using npm
-npm create eliza@beta
+npm create eliza
 
 # Or using npx
-npx @elizaos/cli@beta create
+npx @elizaos/cli create
 ```
 
 The CLI will guide you through the setup process, including:
@@ -7640,7 +7636,7 @@ import TabItem from '@theme/TabItem';
 
 ```bash
 # Install globally
-npm install -g @elizaos/cli@beta
+npm install -g @elizaos/cli
 # Start ElizaOS
 elizaos start
 ```
@@ -7650,7 +7646,7 @@ elizaos start
 
 ```bash
 # Use directly with npx
-npx @elizaos/cli@beta start
+npx @elizaos/cli start
 ```
 
   </TabItem>
@@ -7662,7 +7658,7 @@ git clone git@github.com:elizaOS/eliza.git
 cd eliza
 
 # Switch to development branch
-git checkout v2-develop
+git checkout main
 
 # Install dependencies
 bun install
