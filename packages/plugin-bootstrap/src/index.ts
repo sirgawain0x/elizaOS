@@ -1452,4 +1452,6 @@ export const bootstrapPlugin: Plugin = {
   services: [TaskService],
 };
 
+// Export as both default and named 'plugin' for better compatibility
+export { bootstrapPlugin as plugin };
 export default bootstrapPlugin;

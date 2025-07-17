@@ -46,23 +46,37 @@
   ],
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/node": "^22.15.3",
+    "@types/node": "^24.0.14",
     "@types/uuid": "^10.0.0",
     "bun": "^1.2.15",
     "husky": "^9.1.7",
-    "lerna": "8.1.4",
+    "lerna": "8.2.3",
     "tsup": "8.5.0",
     "turbo": "^2.5.5",
-    "typescript": "5.8.2"
+    "typescript": "5.8.3"
   },
   "resolutions": {
-    "@nrwl/devkit": "19.8.4",
-    "@nrwl/tao": "19.8.4",
+    "@elizaos/core": "1.2.11-beta.0",
+    "@elizaos/plugin-sql": "1.2.11-beta.0",
+    "@elizaos/plugin-bootstrap": "1.2.11-beta.0",
+    "nx": "19.8.14",
+    "@nx/devkit": "19.8.14",
+    "@nrwl/devkit": "19.8.14",
+    "@nrwl/tao": "19.8.14",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "@types/react": "19.1.5",
     "typedoc-plugin-markdown": "4.2.10",
     "typedoc": "0.27.9"
+  },
+  "overrides": {
+    "@elizaos/core": "1.2.11-beta.0",
+    "@elizaos/plugin-sql": "1.2.11-beta.0",
+    "@elizaos/plugin-bootstrap": "1.2.11-beta.0",
+    "nx": "19.8.14",
+    "@nx/devkit": "19.8.14",
+    "@nrwl/devkit": "19.8.14",
+    "@nrwl/tao": "19.8.14"
   },
   "trustedDependencies": [
     "@swc/core",

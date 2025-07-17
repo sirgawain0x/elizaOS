@@ -62,25 +62,65 @@ export async function loadAndPreparePlugin(pluginName: string): Promise<Plugin |
     return null;
   }
 
-  const expectedFunctionName = `${pluginName
-    .replace(/^@elizaos\/plugin-/, '')
-    .replace(/^@elizaos\//, '')
-    .replace(/-./g, (match) => match[1].toUpperCase())}Plugin`;
+  // Debug logging for module exports
+  logger.debug(`Module exports for ${pluginName}:`, Object.keys(pluginModule));
 
-  const exportsToCheck = [
-    pluginModule[expectedFunctionName],
-    pluginModule.default,
-    ...Object.values(pluginModule),
-  ];
+  // More robust export detection
+  let plugin: Plugin | null = null;
 
-  for (const potentialPlugin of exportsToCheck) {
-    if (isValidPluginShape(potentialPlugin)) {
-      return potentialPlugin as Plugin;
+  // 1. Check for named export 'plugin'
+  if (pluginModule.plugin && isValidPluginShape(pluginModule.plugin)) {
+    logger.debug(`Found named export 'plugin' in ${pluginName}`);
+    plugin = pluginModule.plugin as Plugin;
+  }
+  // 2. Check for default export
+  else if (pluginModule.default && isValidPluginShape(pluginModule.default)) {
+    logger.debug(`Found default export in ${pluginName}`);
+    plugin = pluginModule.default as Plugin;
+  }
+  // 3. Check for direct export (module itself is the plugin)
+  else if (isValidPluginShape(pluginModule)) {
+    logger.debug(`Module itself is a valid plugin for ${pluginName}`);
+    plugin = pluginModule as Plugin;
+  }
+  // 4. Check for expected function name pattern
+  else {
+    const expectedFunctionName = `${pluginName
+      .replace(/^@elizaos\/plugin-/, '')
+      .replace(/^@elizaos\//, '')
+      .replace(/-./g, (match) => match[1].toUpperCase())}Plugin`;
+
+    if (
+      pluginModule[expectedFunctionName] &&
+      isValidPluginShape(pluginModule[expectedFunctionName])
+    ) {
+      logger.debug(`Found export with expected name '${expectedFunctionName}' in ${pluginName}`);
+      plugin = pluginModule[expectedFunctionName] as Plugin;
     }
   }
 
-  logger.warn(`Could not find a valid plugin export in ${pluginName}.`);
-  return null;
+  // 5. Last resort: check all exports
+  if (!plugin) {
+    for (const [key, value] of Object.entries(pluginModule)) {
+      if (key !== 'default' && isValidPluginShape(value)) {
+        logger.debug(`Found valid plugin export '${key}' in ${pluginName}`);
+        plugin = value as Plugin;
+        break;
+      }
+    }
+  }
+
+  if (!plugin) {
+    logger.error(`Could not find a valid plugin export in ${pluginName}.`);
+    logger.error(`Available exports: ${Object.keys(pluginModule).join(', ')}`);
+    if (pluginModule.default) {
+      logger.error(
+        `Default export type: ${typeof pluginModule.default}, has name: ${pluginModule.default?.name}`
+      );
+    }
+  }
+
+  return plugin;
 }
 
 /**
