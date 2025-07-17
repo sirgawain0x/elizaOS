@@ -87,6 +87,29 @@ export async function startAgent(
 
   await runtime.initialize();
 
+  // Verify plugin registration
+  logger.info(`Verifying plugin registration for ${runtime.character.name}...`);
+  const registeredActions = runtime.actions.map((a) => a.name);
+  const registeredProviders = runtime.providers.map((p) => p.name);
+  const registeredPlugins = runtime.plugins.map((p) => p.name);
+
+  logger.info(`Registered ${registeredPlugins.length} plugins: ${registeredPlugins.join(', ')}`);
+  logger.info(`Registered ${registeredActions.length} actions: ${registeredActions.join(', ')}`);
+  logger.info(
+    `Registered ${registeredProviders.length} providers: ${registeredProviders.join(', ')}`
+  );
+
+  // Verify each plugin's components were registered
+  for (const plugin of finalPlugins) {
+    const pluginActions = (plugin.actions || []).map((a) => a.name);
+    const missingActions = pluginActions.filter((a) => !registeredActions.includes(a));
+
+    if (missingActions.length > 0) {
+      logger.error(`Plugin ${plugin.name} has unregistered actions: ${missingActions.join(', ')}`);
+      logger.error(`This may indicate duplicate runtime instances or module resolution issues.`);
+    }
+  }
+
   // Discover and run plugin schema migrations
   try {
     const migrationService = runtime.getService('database_migration');

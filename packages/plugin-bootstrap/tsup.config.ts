@@ -6,7 +6,7 @@ export default defineConfig({
   tsconfig: './tsconfig.build.json', // Use build-specific tsconfig
   sourcemap: true,
   clean: true,
-  format: ['esm'], // Ensure you're targeting CommonJS
+  format: ['esm'], // ESM format
   dts: true,
   external: [
     'dotenv', // Externalize dotenv to prevent bundling
@@ -18,6 +18,17 @@ export default defineConfig({
     'agentkeepalive',
     'zod',
     '@elizaos/core',
+    '@elizaos/plugin-sql',
+    'uuid',
+    'v4',
+    // Node.js built-ins
+    'node:fs',
+    'node:path',
+    'node:crypto',
+    'node:stream',
+    'node:buffer',
+    'node:util',
+    'node:events',
     // Add other modules you want to externalize
   ],
 });
